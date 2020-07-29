@@ -1,4 +1,3 @@
-const { clear } = require("console");
 
 function checker (array,givenString) {
     for (let index = 0; index < array.length; index++) {

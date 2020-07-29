@@ -24,19 +24,21 @@ function startGame() {
   //-------------Accept the last arguments (coordinates and generation count) and validate inputs -----------------
 
   let validArgs = coordAndGeneration(grid); // return valid args
-  let x1Col = validArgs[0];
-  let y1Row = validArgs[1];
+
+  let targetPointCol = validArgs[0];
+  let targetPointRow = validArgs[1];
   let generations = validArgs[2];
 
-  let targetPointRow = y1Row;
-  let targetPointCol = x1Col;
+  //counter for green state of target point during generations
   let targetPointGreenCounter = 0;
+
   // print Generation Zero state
   console.log(`Generation Zero`);
   console.log(printMatrix(grid));
 
+// start iterate generations
   for (let generationZero = 0; generationZero < generations; generationZero++) {
-    // start iterate generations
+    
     let cloneMatrix = new Array(height) // create empty clone grid to fill it with next generation values
       .fill(null)
       .map(() => new Array(width).fill(null));
@@ -45,8 +47,9 @@ function startGame() {
       for (let col = 0; col < grid[row].length; col++) {
         let greenNeighbours =  countGreenNeighbours(grid, row, col).toString();
         let currentCell = grid[row][col];
+
+         // fill cell by cell the empty clone grid
         cloneMatrix = fillGridClone(
-          // we fill cell by cell the empty clone grid
           currentCell,
           cloneMatrix,
           greenNeighbours,

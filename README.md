@@ -20,7 +20,7 @@ Installation :
   npm version
    6.14.4
   
-  2. Run npm install prompt-sync in the terminal  (for reading inputs from terminal)
+  2. Run npm install prompt-sync in the terminal  (for reading inputs from the terminal)
 
 To run the application type in terminal:
     

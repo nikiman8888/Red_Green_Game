@@ -1,78 +1,72 @@
-const printMatrix = require("./utills/printMatrix"); // return grid (matrix)
-const countGreenNeighbours = require("./utills/countGreenNeighbours"); // count green neighbour cells of given cell
-const fillGridClone = require("./utills/fillGridClone"); // fill the grid clone
-
 //accept Grid width and height from terminal and return validated width and height
-const inputGrid = require("./inputs/gridSize.js");
+const gridSizes = require("./getData/gridSizes.js");
 //aceppt rows from terminal and return filled Grid
-const createColumnsGrid = require("./inputs/columnsGrid.js");
+const getRows = require("./getData/getRows.js");
 //accept coordinates and generations count from terminal and return valid data(x1,y1,generations)
-const coordAndGeneration = require("./inputs/coordAndGeneration.js");
+const coordAndGeneration = require("./getData/coordAndGeneration.js");
+// import Matrix class
+const Matrix = require('./classFolder/Matrix.js')
+//import TargetPoint class 
+const TargetPoint = require('./classFolder/TargetPoint.js'); 
 
 function startGame() {
-  //--------------------- Accept Grid size arguments and validate --------------------
-
-  let sizes = inputGrid();
+  //Accept and validate Grid size arguments from terminal 
+  let sizes = gridSizes(); 
   let width = sizes[0];
   let height = sizes[1];
 
-  // ----------------------------Accept and create the Generation Zero state(Grid) and validate -------
-
-  let grid = new Array(height); // create the game grid rows
-  grid = createColumnsGrid(grid, width); // returned validated grid(matrix);
-
-  //-------------Accept the last arguments (coordinates and generation count) and validate inputs -----------------
-
-  let validArgs = coordAndGeneration(grid); // return valid args
-
-  let targetPointCol = validArgs[0];
-  let targetPointRow = validArgs[1];
+  //Accept and validate rows of the Grid from terminal
+  let validatedRows = getRows(height, width); 
+  let matrix = new Matrix(height,width); 
+ 
+  //Start to create Generation Zero state in matrix.gameGrid property
+    for (let row = 0; row < validatedRows.length; row++) {
+        let currentRow = validatedRows[row];
+        for (let col = 0; col < currentRow.length; col++) {
+            let currentChar = currentRow[col];
+            matrix.createCellValue(currentChar,row,col); //fill each cell of the gameGrid prop with values           
+        }     
+    }
+    
+  //Accept and validate last arguments (x1,y1,generations) from terminal
+  let validArgs = coordAndGeneration(matrix.gameGrid); 
+  let targetPointX = validArgs[0];
+  let targetPointY = validArgs[1];
   let generations = validArgs[2];
 
-  //counter for green state of target point during generations
-  let targetPointGreenCounter = 0;
-
-  // print Generation Zero state
-  console.log(`Generation Zero`);
-  console.log(printMatrix(grid));
+  let targetedPoint = new TargetPoint(targetPointX,targetPointY); //create targeted Point 
+  
+  console.log(`Generation Zero`);  // print the Generation Zero state
+  console.log(matrix.printGameGrid());
 
 // start iterate generations
   for (let generationZero = 0; generationZero < generations; generationZero++) {
-    
-    let cloneMatrix = new Array(height) // create empty clone grid to fill it with next generation values
-      .fill(null)
-      .map(() => new Array(width).fill(null));
-
-    for (let row = 0; row < grid.length; row++) {
-      for (let col = 0; col < grid[row].length; col++) {
-        let greenNeighbours =  countGreenNeighbours(grid, row, col).toString();
-        let currentCell = grid[row][col];
-
-         // fill cell by cell the empty clone grid
-        cloneMatrix = fillGridClone(
-          currentCell,
-          cloneMatrix,
-          greenNeighbours,
-          row,
-          col
-        );
+    //create a new Matrix obj to fill with new generation state
+    let cloneMatrix = new Matrix(height,width) 
+     
+    // iterate each cell of current generation state(gameGrid) and fill cloneMatrix with new generation values
+    for (let row = 0; row < matrix.gameGrid.length; row++) {
+        let gridCurrentRow =  matrix.gameGrid[row];
+      for (let col = 0; col < gridCurrentRow.length; col++) {
+        let greenNeighbours = matrix.countGreenNeighboursCell( row, col) 
+        let transformedCell = matrix.transformColorCell(greenNeighbours,row,col);
+        cloneMatrix.createCellValue(transformedCell,row,col);            
       }
     }
-    // old Grid state get the new generation state from the cloned grid
-    grid = cloneMatrix;
-    console.log(`${generationZero + 1} Generation`); // print each generation state
-    console.log(printMatrix(grid));
+    // assign the new generation state to current state
+    matrix.gameGrid = cloneMatrix.gameGrid; 
+    // be aware that x mean horizontal (columns), y mean  vertical (row) of Grid  on condition
+    let getTargetedCellValue = matrix.gameGrid[targetedPoint.y][targetedPoint.x];
+    //count every time the cell has green color
+    targetedPoint.countGreenState(getTargetedCellValue);
 
-    // count the targeted point is  green in the current generation
-    if (grid[targetPointRow][targetPointCol] === "1") {
-      targetPointGreenCounter++;
-    }
+    console.log(`${generationZero + 1} Generation`); 
+    console.log(matrix.printGameGrid());
   }
+
   console.log(
-    `The target point with coordinates [${targetPointCol},${targetPointRow}](column, row) becomes green ${targetPointGreenCounter} times for ${generations} generations.\n`
-  );
-  
-  //'If you want to count the Generation Zero state and the Targeted Point(cell) is green, the result will be + 1
- 
+    `The targeted point with coordinates [${targetedPoint.x},${targetedPoint.y}](column, row) becomes green ${targetedPoint.getGreenCounter()} times for ${generations} generations.\n`
+  ); 
+  //'If you count the Generation Zero state and the Targeted Point(cell) is green, the result will be + 1
 }
 startGame();

@@ -2,7 +2,7 @@ Red_Green_Game
 
 Simple console App built with Javascript and VS Code.
 
-Game story - We are creating a matrix from 0(red) an (green) numbers (Generation Zero state).Then we choose a point from that matrix and set generations(loops). Every generation our state of the matrix is changing by some condition.
+Game story - We are creating a matrix from 0(red) and 1(green) numbers (Generation Zero state).Then we choose a point from that matrix and set generations(loops). Every generation our state of the matrix is changing by some condition.
 The App needs to count how many times our point will change color to green in all generations.
  You have to type three console inputs.
         -the first input is to set the width and height of the matrix(size), array separated by comma and space

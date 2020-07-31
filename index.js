@@ -1,6 +1,6 @@
-//accept Grid width and height from terminal and return validated width and height
+//accept Grid width and height from terminal and return array with validated width and height
 const gridSizes = require("./getData/gridSizes.js");
-//aceppt rows from terminal and return filled Grid
+//aceppt rows from terminal and return array valid data (rows)
 const getRows = require("./getData/getRows.js");
 //accept coordinates and generations count from terminal and return valid data(x1,y1,generations)
 const coordAndGeneration = require("./getData/coordAndGeneration.js");

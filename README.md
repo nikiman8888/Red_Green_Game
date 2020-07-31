@@ -6,9 +6,14 @@ Game story - We are creating a matrix from 0(red) and 1(green) numbers (Generati
 The App needs to count how many times our point will change color to green in all generations.
  You have to type three console inputs.
 
-        -the first input is to set the width and height of the matrix(size), array separated by comma and space
-        -the second input  is to set the rows in the matrix with 0 and 1 digits, string long x(width) characters
-        -the third input is to set coordinates of searched point and generations count, array separated by comma space
+        -the first input is to set the width and height of the matrix(size),
+         array separated by comma and space
+
+        -the second input  is to set the rows in the matrix with 0 and 1 digits,
+         string long x(width) characters
+
+        -the third input is to set coordinates of searched point and generations count,
+         array separated by comma space
 
  
 When the project is cloned or downloaded:
